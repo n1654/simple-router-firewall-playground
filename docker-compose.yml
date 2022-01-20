@@ -1,0 +1,93 @@
+version: "3.8"
+
+services:
+
+  site_left:
+    cap_add:
+      - NET_ADMIN
+    build:
+      context: .
+      dockerfile: left.dockerfile
+    ports:
+      - "60622:22"
+    tty: true
+    networks:
+      default:
+        ipv4_address: 172.20.0.127
+      left-ext-net:
+        ipv4_address: 123.45.1.101
+    hostname: SITE_LEFT
+  
+  site_right:
+    cap_add:
+      - NET_ADMIN
+    build:
+      context: .
+      dockerfile: right.dockerfile
+    ports:
+      - "60722:22"
+    tty: true
+    networks:
+      default:
+        ipv4_address: 172.20.0.128
+      right-ext-net:
+        ipv4_address: 123.45.3.101
+    hostname: SITE_RIGHT
+
+  router_left_middle:
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    build:
+      context: .
+      dockerfile: left-middle.dockerfile
+    ports:
+      - "60822:22"
+    tty: true
+    networks:
+      default:
+        ipv4_address: 172.20.0.129
+      left-ext-net:
+        ipv4_address: 123.45.1.100
+      middle-ext-net:
+        ipv4_address: 123.45.2.101
+    hostname: ROUTER_L_MIDDLE
+  
+  router_right_middle:
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    build:
+      context: .
+      dockerfile: right-middle.dockerfile
+    ports:
+      - "60922:22"
+    tty: true
+    networks:
+      default:
+        ipv4_address: 172.20.0.130
+      middle-ext-net:
+        ipv4_address: 123.45.2.102
+      right-ext-net:
+        ipv4_address: 123.45.3.100
+    hostname: ROUTER_R_MIDDLE
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+  left-ext-net:
+    ipam:
+      config:
+        - subnet: 123.45.1.0/24
+  middle-ext-net:
+    ipam:
+      config:
+        - subnet: 123.45.2.0/24
+  right-ext-net:
+    ipam:
+      config:
+        - subnet: 123.45.3.0/24

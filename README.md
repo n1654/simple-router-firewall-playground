@@ -41,3 +41,8 @@ $ iptables -t nat -A POSTROUTING -o eth2 -j MASQUERADE -m state --state ESTABLIS
 $ iptables -R INPUT 1 -p icmp --icmp-type echo-request -j ACCEPT --match limit --limit 1/second
 $ iptables -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
 ```
+
+nmap exmaples
+```sh
+$ nmap -n -p- <ip-address>
+```

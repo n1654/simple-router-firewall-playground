@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-RUN apk add openssh bash busybox-extras --no-cache
+RUN apk add openssh bash busybox-extras iperf3 tcpdump iproute2 --no-cache
 
 RUN echo -e "Port 22\n\
 AddressFamily any\n\

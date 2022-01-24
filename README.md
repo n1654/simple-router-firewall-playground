@@ -28,6 +28,7 @@ Here you play with:
 Adds `<latency>` ms, `<jitter>` ms, `loss` perc. 
 ```sh
 $ tc qdisc add dev eth1 root netem delay 100ms 20ms loss 50%
+$ tc qdisc add dev eth0 root tbf rate 1024kbit latency 100ms burst 1540
 ```
 
 Iptables examples
@@ -37,4 +38,6 @@ $ iptables -A FORWARD -p icmp --icmp-type echo-request -j REJECT
 $ iptables -D FORWARD 1
 $ iptables -t nat -A POSTROUTING -o eth2 -j MASQUERADE
 $ iptables -t nat -A POSTROUTING -o eth2 -j MASQUERADE -m state --state ESTABLISHED,RELATED,NEW
+$ iptables -R INPUT 1 -p icmp --icmp-type echo-request -j ACCEPT --match limit --limit 1/second
+$ iptables -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
 ```
